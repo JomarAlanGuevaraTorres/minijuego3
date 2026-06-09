@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://4j52skrl2k41"
+
+[deps]
+
+files=["res://scenes/menus/credits/data/community.GitHub Username.translation", "res://scenes/menus/credits/data/community.Team.translation"]
+
+source_file="res://scenes/menus/credits/data/community.csv"
+dest_files=["res://scenes/menus/credits/data/community.GitHub Username.translation", "res://scenes/menus/credits/data/community.Team.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://c5b4kbfgemioq"
+
+[deps]
+
+files=["res://scenes/menus/credits/data/endless_access.Name.translation", "res://scenes/menus/credits/data/endless_access.GitHub Username.translation"]
+
+source_file="res://scenes/menus/credits/data/endless_access.csv"
+dest_files=["res://scenes/menus/credits/data/endless_access.Name.translation", "res://scenes/menus/credits/data/endless_access.GitHub Username.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true
