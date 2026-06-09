@@ -41,7 +41,7 @@ func _ready():
 		sb.border_width_bottom = 2
 		sb.border_color = Color(0.4, 0.4, 0.6)
 		label.add_theme_stylebox_override("normal", sb)
-		
+
 func _actualizar_timer_display():
 	var minutos = int(tiempo_restante) / 60
 	var segundos = int(tiempo_restante) % 60
@@ -115,10 +115,10 @@ func _physics_process(delta):
 	
 	if Input.is_action_pressed("ui_right"):
 		velocity.x = 200
-		$Player/Sprite2D.flip_h = false
+		$Player/AnimatedSprite2D.flip_h = false
 	elif Input.is_action_pressed("ui_left"):
 		velocity.x = -200
-		$Player/Sprite2D.flip_h = true
+		$Player/AnimatedSprite2D.flip_h = true
 	
 	if Input.is_action_pressed("ui_up"):
 		velocity.y = -200

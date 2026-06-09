@@ -546,6 +546,7 @@ shader_parameter/noise_intensity = 0.10000000475
 shader_parameter/grain_amount = 0.250000011875
 
 [node name="Intro" type="Node2D" unique_id=686550269]
+position = Vector2(2, 0)
 
 [node name="TileMapLayers" type="Node2D" parent="." unique_id=17589694]
 
@@ -628,7 +629,6 @@ position = Vector2(464, 287)
 stream = ExtResource("9_45txo")
 volume_db = 10.884
 autoplay = true
-bus = &"Music"
 
 [node name="School" type="Sprite2D" parent="." unique_id=1014388241]
 position = Vector2(494, 328)
