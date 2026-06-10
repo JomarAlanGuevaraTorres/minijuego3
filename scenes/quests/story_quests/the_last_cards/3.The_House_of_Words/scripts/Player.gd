@@ -4,7 +4,7 @@
 
 extends CharacterBody2D
 
-const MOVE_SPEED: float = 150.0
+const MOVE_SPEED: float = 250.0
 
 signal letra_iluminada(node: Node2D)
 signal letra_oscurecida(node: Node2D)
@@ -15,9 +15,6 @@ signal letra_oscurecida(node: Node2D)
 @onready var animation_player: AnimationPlayer    = $AnimationPlayer
 
 var _last_direction: Vector2 = Vector2.RIGHT
-
-# Dirección actual calculada desde _unhandled_input
-# Se resetea cada frame en _physics_process
 var _input_dir: Vector2 = Vector2.ZERO
 
 const LOOK_AT_TURN_SPEED: float = 10.0
@@ -27,15 +24,8 @@ func _ready() -> void:
 	detection_area.area_entered.connect(_on_detection_area_area_entered)
 	detection_area.area_exited.connect(_on_detection_area_area_exited)
 
-# _unhandled_input solo recibe eventos que la UI NO consumió
-# Si el LineEdit tiene foco, él consume las teclas y este método NO se llama
-func _unhandled_key_input(event: InputEvent) -> void:
-	# Solo nos interesan eventos de teclado activos
-	pass
-
 func _physics_process(delta: float) -> void:
-	# Leer input SOLO si la UI no tiene foco
-	# has_focus() de cualquier control con foco bloquea esto
+	# Si la UI tiene foco, el jugador no se mueve
 	var focus_owner = get_viewport().gui_get_focus_owner()
 	var ui_has_focus = focus_owner != null
 

@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://e3vubu06sx60" path="res://scenes/quests/story_quests/the_last_cards/3.The_House_of_Words/scenes/Player.tscn" id="4_04nh5"]
 [ext_resource type="SpriteFrames" uid="uid://nfm4t7txex23" path="res://scenes/quests/story_quests/after_the_tremor/player_components/personajes/ente.tres" id="4_rie1x"]
 [ext_resource type="Script" uid="uid://df1hlhbkn06ws" path="res://scenes/quests/story_quests/the_last_cards/3.The_House_of_Words/scripts/hidden_letter.gd" id="5_rie1x"]
+[ext_resource type="PackedScene" uid="uid://dhydhpp43urah" path="res://scenes/ui_elements/dialogue/balloon.tscn" id="7_sc6b0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_o6256"]
 shader = ExtResource("2_04nh5")
@@ -47,9 +48,6 @@ script = ExtResource("3_sc6b0")
 offset_right = 1612.0
 offset_bottom = 973.0
 color = Color(0.92535293, 0.9253528, 0.9253529, 1)
-
-[node name="Player" parent="." unique_id=689832587 instance=ExtResource("4_04nh5")]
-position = Vector2(200, 500)
 
 [node name="CanvasGroup" type="CanvasGroup" parent="." unique_id=561364126]
 
@@ -271,6 +269,9 @@ offset_right = 845.0
 offset_bottom = 609.0
 max_length = 5
 
+[node name="Player" parent="." unique_id=689832587 instance=ExtResource("4_04nh5")]
+position = Vector2(200, 500)
+
 [node name="Zombie" type="CharacterBody2D" parent="." unique_id=31193335]
 position = Vector2(340, 80)
 
@@ -379,3 +380,5 @@ text = "C"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Letras Escondidas/Letra_A2" unique_id=1252844015]
 position = Vector2(34, 52)
 shape = SubResource("CircleShape2D_04nh5")
+
+[node name="Dialogue" parent="." unique_id=308207015 instance=ExtResource("7_sc6b0")]
