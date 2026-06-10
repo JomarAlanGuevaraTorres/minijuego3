@@ -1,9 +1,6 @@
 extends Node2D
 
-const PALABRAS = [
-	"CARTA"
-]
-
+const PALABRAS = ["CARTA"]
 const SPEED_ZOMBIE = 40
 
 var palabra_secreta = ""
@@ -14,17 +11,26 @@ var juego_activo = true
 func _ready():
 	randomize()
 	palabra_secreta = PALABRAS[randi() % PALABRAS.size()]
+
+	# Conectar el LineEdit
 	$CanvasGroup/InputLetra.text_submitted.connect(_on_palabra_enviada)
+
+	# Temporizador principal
 	$Timer.timeout.connect(_on_tiempo_agotado)
-	
-	# Timer de 1 segundo para actualizar display
+
+	# Tick de 1 segundo para el contador
 	var tick = Timer.new()
 	tick.wait_time = 1.0
 	tick.autostart = true
 	add_child(tick)
 	tick.timeout.connect(_on_timer_tick)
-	
+
 	_actualizar_timer_display()
+
+	# Señales de letras ocultas
+	$Player.letra_iluminada.connect(_on_letra_iluminada)
+	$Player.letra_oscurecida.connect(_on_letra_oscurecida)
+
 	# Configurar los 30 Labels del grid
 	for i in range(30):
 		var label = $CanvasGroup/Panel/GridLetras.get_child(i)
@@ -32,7 +38,6 @@ func _ready():
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.add_theme_font_size_override("font_size", 28)
-		# Fondo gris oscuro por defecto
 		var sb = StyleBoxFlat.new()
 		sb.bg_color = Color(0.15, 0.15, 0.25)
 		sb.border_width_left = 2
@@ -42,52 +47,68 @@ func _ready():
 		sb.border_color = Color(0.4, 0.4, 0.6)
 		label.add_theme_stylebox_override("normal", sb)
 
+	# Mostrar instrucción inicial
+	$CanvasGroup/Panel/LabelMensaje.text = "Haz click en el cuadro y escribe"
+
+func _on_letra_iluminada(nodo: Node2D) -> void:
+	if nodo.has_method("revelar_desde_player"):
+		nodo.revelar_desde_player()
+
+func _on_letra_oscurecida(nodo: Node2D) -> void:
+	if nodo.has_method("oscurecer_desde_player"):
+		nodo.oscurecer_desde_player()
+
 func _actualizar_timer_display():
 	var minutos = int(tiempo_restante) / 60
 	var segundos = int(tiempo_restante) % 60
 	$CanvasGroup/LabelTiempo.text = "%02d:%02d" % [minutos, segundos]
-	
+
 func _process(delta):
 	if not juego_activo:
 		return
-	# Zombi se acerca al jugador
+	# Zombi persigue al jugador
 	var dir = ($Player.position - $Zombie.position).normalized()
 	$Zombie.position += dir * SPEED_ZOMBIE * delta
-
-	# Detectar colisión zombi-jugador
-	var dist = $Zombie.position.distance_to($Player.position)
-	if dist < 80:
+	if $Zombie.position.distance_to($Player.position) < 80:
 		_game_over()
 
-func _on_palabra_enviada(texto):
+# El jugador presiona Enter — evaluar palabra
+func _on_palabra_enviada(texto: String):
 	if not juego_activo:
 		return
 	var intento = texto.to_upper().strip_edges()
+	$CanvasGroup/InputLetra.text = ""
+	# Mantener el foco para seguir escribiendo intentos
+	$CanvasGroup/InputLetra.grab_focus()
+
 	if intento.length() != 5:
 		$CanvasGroup/Panel/LabelMensaje.text = "Escribe exactamente 5 letras"
 		return
-	_evaluar_intento(intento)
-	$CanvasGroup/InputLetra.text = ""
 
-func _evaluar_intento(intento):
+	_evaluar_intento(intento)
+
+func _evaluar_intento(intento: String):
 	for i in range(5):
 		var label = $CanvasGroup/Panel/GridLetras.get_child(intento_actual * 5 + i)
 		label.text = intento[i]
 		if intento[i] == palabra_secreta[i]:
-			label.add_theme_color_override("font_color", Color.GREEN)
-			label.add_theme_stylebox_override("normal", _crear_fondo(Color(0.2, 0.5, 0.2)))
-		elif palabra_secreta.contains(intento[i]):
-			label.add_theme_color_override("font_color", Color.YELLOW)
-			label.add_theme_stylebox_override("normal", _crear_fondo(Color(0.5, 0.4, 0.1)))
-		else:
+			# Verde: posición correcta
 			label.add_theme_color_override("font_color", Color.WHITE)
-			label.add_theme_stylebox_override("normal", _crear_fondo(Color(0.2, 0.2, 0.2)))
+			label.add_theme_stylebox_override("normal", _crear_fondo(Color(0.2, 0.55, 0.2)))
+		elif palabra_secreta.contains(intento[i]):
+			# Amarillo: letra existe pero en otra posición
+			label.add_theme_color_override("font_color", Color.WHITE)
+			label.add_theme_stylebox_override("normal", _crear_fondo(Color(0.6, 0.5, 0.0)))
+		else:
+			# Gris: letra no existe
+			label.add_theme_color_override("font_color", Color.WHITE)
+			label.add_theme_stylebox_override("normal", _crear_fondo(Color(0.3, 0.3, 0.3)))
 
 	if intento == palabra_secreta:
 		juego_activo = false
 		$CanvasGroup/Panel/LabelMensaje.text = "¡Correcto! La puerta se abre..."
 		await get_tree().create_timer(2.0).timeout
-		get_tree().change_scene_to_file("res://scenes/Room2.tscn")
+		get_tree().change_scene_to_file("res://scenes/quests/story_quests/the_last_cards/3.The_House_of_Words/scenes/Room2.tscn")
 	else:
 		intento_actual += 1
 		if intento_actual >= 6:
@@ -105,29 +126,8 @@ func _on_tiempo_agotado():
 
 func _game_over():
 	juego_activo = false
-	get_tree().change_scene_to_file("res://scenes/GameOver.tscn")
+	get_tree().change_scene_to_file("res://scenes/quests/story_quests/the_last_cards/3.The_House_of_Words/scenes/GameOver.tscn")
 
-func _physics_process(delta):
-	if not juego_activo or escribiendo:
-		return
-	
-	var velocity = Vector2.ZERO
-	
-	if Input.is_action_pressed("ui_right"):
-		velocity.x = 200
-		$Player/AnimatedSprite2D.flip_h = false
-	elif Input.is_action_pressed("ui_left"):
-		velocity.x = -200
-		$Player/AnimatedSprite2D.flip_h = true
-	
-	if Input.is_action_pressed("ui_up"):
-		velocity.y = -200
-	elif Input.is_action_pressed("ui_down"):
-		velocity.y = 200
-
-	$Player.velocity = velocity
-	$Player.move_and_slide() 
-	
 func _on_timer_tick():
 	if not juego_activo:
 		return
@@ -136,10 +136,13 @@ func _on_timer_tick():
 	if tiempo_restante <= 0:
 		_game_over()
 
-var escribiendo = false
-
-func _on_input_focus():
-	escribiendo = true
-
-func _on_input_unfocus():
-	escribiendo = false
+# Manejar clicks: dar/quitar foco al LineEdit
+func _input(event: InputEvent):
+	if not juego_activo:
+		return
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var rect = $CanvasGroup/InputLetra.get_global_rect()
+		if rect.has_point(event.position):
+			$CanvasGroup/InputLetra.grab_focus()
+		else:
+			$CanvasGroup/InputLetra.release_focus()

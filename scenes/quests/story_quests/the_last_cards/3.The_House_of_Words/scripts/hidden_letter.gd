@@ -11,23 +11,18 @@ signal letra_iluminada(letra: String, indice: int)
 signal letra_oscurecida(letra: String, indice: int)
 
 func _ready() -> void:
+	add_to_group("hidden_letter")
 	if label:
 		label.modulate.a = 0.0
 		label.text = letra
-	body_entered.connect(_on_body_entered)
-	body_exited.connect(_on_body_exited)
 
-func _on_body_entered(body: Node2D) -> void:
-	if body.name != "DetectionArea":
-		return
+func revelar_desde_player() -> void:
 	if recogida:
 		return
 	_revelar()
 	letra_iluminada.emit(letra, indice_en_palabra)
 
-func _on_body_exited(body: Node2D) -> void:
-	if body.name != "DetectionArea":
-		return
+func oscurecer_desde_player() -> void:
 	if recogida:
 		return
 	_oscurecer()

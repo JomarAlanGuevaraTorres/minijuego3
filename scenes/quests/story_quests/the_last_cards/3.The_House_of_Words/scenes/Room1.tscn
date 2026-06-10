@@ -29,23 +29,24 @@ size = Vector2(367, 441)
 radius = 75.9276
 
 [node name="Room1" type="Node2D" unique_id=8831323]
+position = Vector2(0, 1)
 script = ExtResource("1_2dtu0")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=2042230701]
-offset_right = 1612.0
-offset_bottom = 973.0
-color = Color(0.92535293, 0.9253528, 0.9253529, 1)
-
-[node name="CanvasLayer" type="CanvasLayer" parent="ColorRect" unique_id=695187882]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=695187882]
 layer = 10
 
-[node name="DarknessOverlay" type="ColorRect" parent="ColorRect/CanvasLayer" unique_id=351799045]
+[node name="DarknessOverlay" type="ColorRect" parent="CanvasLayer" unique_id=351799045]
 z_index = 10
 material = SubResource("ShaderMaterial_o6256")
 offset_right = 1612.0
 offset_bottom = 973.0
 color = Color(0, 0, 0, 0.003921569)
 script = ExtResource("3_sc6b0")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2042230701]
+offset_right = 1612.0
+offset_bottom = 973.0
+color = Color(0.92535293, 0.9253528, 0.9253529, 1)
 
 [node name="Player" parent="." unique_id=689832587 instance=ExtResource("4_04nh5")]
 position = Vector2(200, 500)
