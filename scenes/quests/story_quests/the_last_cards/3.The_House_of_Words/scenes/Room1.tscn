@@ -1,30 +1,11 @@
 [gd_scene format=3 uid="uid://icxmuswvxk8c"]
 
 [ext_resource type="Script" uid="uid://4j6fvyhsis6o" path="res://scenes/quests/story_quests/the_last_cards/3.The_House_of_Words/scripts/room1.gd" id="1_2dtu0"]
-[ext_resource type="SpriteFrames" uid="uid://dkcv15as5d6gw" path="res://scenes/quests/story_quests/after_the_tremor/bryan_components/after_the_tremor_bryan.tres" id="3_o4jf0"]
-[ext_resource type="Shader" uid="uid://dmm7vum4u3k5e" path="res://scenes/quests/story_quests/after_the_tremor/0_intro/0_intro_part6/night.gdshader" id="4_o4jf0"]
+[ext_resource type="Shader" uid="uid://dh84ve3vk3fvm" path="res://scenes/quests/story_quests/the_last_cards/3.The_House_of_Words/scripts/darkness_cone.gdshader" id="2_04nh5"]
+[ext_resource type="Script" uid="uid://d3tdqiu0hfunn" path="res://scenes/quests/story_quests/the_last_cards/3.The_House_of_Words/scripts/darkness_overlay.gd" id="3_sc6b0"]
+[ext_resource type="PackedScene" uid="uid://e3vubu06sx60" path="res://scenes/quests/story_quests/the_last_cards/3.The_House_of_Words/scenes/Player.tscn" id="4_04nh5"]
 [ext_resource type="SpriteFrames" uid="uid://nfm4t7txex23" path="res://scenes/quests/story_quests/after_the_tremor/player_components/personajes/ente.tres" id="4_rie1x"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rie1x"]
-shader = ExtResource("4_o4jf0")
-shader_parameter/enable_base_dark = true
-shader_parameter/darkness = 0.750000035625
-shader_parameter/vignette_strength = 1.2
-shader_parameter/vignette_size = 0.5
-shader_parameter/enable_desat = true
-shader_parameter/desaturation = 0.6000000285
-shader_parameter/enable_noise = true
-shader_parameter/noise_intensity = 0.0800000038
-shader_parameter/grain_amount = 0.30000001425
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xhlaj"]
-size = Vector2(63, 68)
-
-[sub_resource type="Gradient" id="Gradient_o4jf0"]
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_rie1x"]
-gradient = SubResource("Gradient_o4jf0")
-fill = 1
+[ext_resource type="Script" uid="uid://df1hlhbkn06ws" path="res://scenes/quests/story_quests/the_last_cards/3.The_House_of_Words/scripts/hidden_letter.gd" id="5_rie1x"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sf7up"]
 size = Vector2(82, 90)
@@ -34,13 +15,26 @@ size = Vector2(82, 90)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bj4ne"]
 size = Vector2(367, 441)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_04nh5"]
+radius = 75.9276
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o6256"]
+shader = ExtResource("2_04nh5")
+shader_parameter/light_pos = Vector2(0.5, 0.5)
+shader_parameter/light_radius = 0.22
+shader_parameter/cone_angle = 1.05
+shader_parameter/cone_direction = 0.0
+shader_parameter/darkness = 0.96
+shader_parameter/edge_softness = 0.08
+shader_parameter/aspect_ratio = 1.7778
+
 [node name="Room1" type="Node2D" unique_id=8831323]
 script = ExtResource("1_2dtu0")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=2042230701]
-material = SubResource("ShaderMaterial_rie1x")
-offset_right = 1463.0
-offset_bottom = 865.0
+offset_right = 1612.0
+offset_bottom = 973.0
+color = Color(0.92535293, 0.9253528, 0.9253529, 1)
 
 [node name="CanvasGroup" type="CanvasGroup" parent="." unique_id=561364126]
 
@@ -262,27 +256,6 @@ offset_right = 845.0
 offset_bottom = 609.0
 max_length = 5
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=991770014]
-position = Vector2(200, 500)
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player" unique_id=1640737188]
-position = Vector2(-2.1250005, -4.000002)
-scale = Vector2(0.495, 0.3)
-sprite_frames = ExtResource("3_o4jf0")
-animation = &"walk"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=896940019]
-position = Vector2(-3, -5)
-shape = SubResource("RectangleShape2D_xhlaj")
-
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=363429396]
-
-[node name="PointLight2D" type="PointLight2D" parent="Player" unique_id=1605117058]
-color = Color(0.8521535, 0.83362406, 0.9167754, 1)
-energy = 6.24
-texture = SubResource("GradientTexture2D_rie1x")
-texture_scale = 3.0
-
 [node name="Zombie" type="CharacterBody2D" parent="." unique_id=31193335]
 position = Vector2(340, 80)
 
@@ -307,3 +280,100 @@ physics_material_override = SubResource("PhysicsMaterial_7sa2y")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=2114851096]
 position = Vector2(6.5, -24.5)
 shape = SubResource("RectangleShape2D_bj4ne")
+
+[node name="Letras Escondidas" type="Node2D" parent="." unique_id=949954514]
+
+[node name="Letra_C" type="Area2D" parent="Letras Escondidas" unique_id=1390338503 groups=["hidden_letter"]]
+position = Vector2(200, 200)
+script = ExtResource("5_rie1x")
+letra = "C"
+
+[node name="Label" type="Label" parent="Letras Escondidas/Letra_C" unique_id=1436133102]
+modulate = Color(1, 1, 1, 0)
+offset_right = 46.0
+offset_bottom = 99.0
+theme_override_font_sizes/font_size = 72
+text = "C"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Letras Escondidas/Letra_C" unique_id=746694752]
+position = Vector2(34, 52)
+shape = SubResource("CircleShape2D_04nh5")
+
+[node name="Letra_A" type="Area2D" parent="Letras Escondidas" unique_id=825080753 groups=["hidden_letter"]]
+position = Vector2(1200, 200)
+script = ExtResource("5_rie1x")
+indice_en_palabra = 1
+
+[node name="Label" type="Label" parent="Letras Escondidas/Letra_A" unique_id=363449991]
+modulate = Color(1, 1, 1, 0)
+offset_right = 46.0
+offset_bottom = 99.0
+theme_override_font_sizes/font_size = 72
+text = "C"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Letras Escondidas/Letra_A" unique_id=1719998156]
+position = Vector2(34, 52)
+shape = SubResource("CircleShape2D_04nh5")
+
+[node name="Letra_R" type="Area2D" parent="Letras Escondidas" unique_id=1392424883 groups=["hidden_letter"]]
+position = Vector2(1200, 500)
+script = ExtResource("5_rie1x")
+letra = "R"
+indice_en_palabra = 2
+
+[node name="Label" type="Label" parent="Letras Escondidas/Letra_R" unique_id=2047753378]
+modulate = Color(1, 1, 1, 0)
+offset_right = 46.0
+offset_bottom = 99.0
+theme_override_font_sizes/font_size = 72
+text = "C"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Letras Escondidas/Letra_R" unique_id=1408207336]
+position = Vector2(34, 52)
+shape = SubResource("CircleShape2D_04nh5")
+
+[node name="Letra_T" type="Area2D" parent="Letras Escondidas" unique_id=334375802 groups=["hidden_letter"]]
+position = Vector2(200, 500)
+script = ExtResource("5_rie1x")
+letra = "T"
+indice_en_palabra = 3
+
+[node name="Label" type="Label" parent="Letras Escondidas/Letra_T" unique_id=143958458]
+modulate = Color(1, 1, 1, 0)
+offset_right = 46.0
+offset_bottom = 99.0
+theme_override_font_sizes/font_size = 72
+text = "C"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Letras Escondidas/Letra_T" unique_id=286839372]
+position = Vector2(34, 52)
+shape = SubResource("CircleShape2D_04nh5")
+
+[node name="Letra_A2" type="Area2D" parent="Letras Escondidas" unique_id=960775291 groups=["hidden_letter"]]
+position = Vector2(800, 800)
+script = ExtResource("5_rie1x")
+indice_en_palabra = 4
+
+[node name="Label" type="Label" parent="Letras Escondidas/Letra_A2" unique_id=1546967999]
+modulate = Color(1, 1, 1, 0)
+offset_right = 46.0
+offset_bottom = 99.0
+theme_override_font_sizes/font_size = 72
+text = "C"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Letras Escondidas/Letra_A2" unique_id=1252844015]
+position = Vector2(34, 52)
+shape = SubResource("CircleShape2D_04nh5")
+
+[node name="Player" parent="." unique_id=689832587 instance=ExtResource("4_04nh5")]
+position = Vector2(200, 500)
+
+[node name="DarknessOverlay" type="ColorRect" parent="Player" unique_id=351799045]
+z_index = 10
+material = SubResource("ShaderMaterial_o6256")
+offset_left = -198.0
+offset_top = -497.0
+offset_right = 1407.0
+offset_bottom = 473.0
+color = Color(0, 0, 0, 1)
+script = ExtResource("3_sc6b0")
