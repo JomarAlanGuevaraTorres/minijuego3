@@ -7,6 +7,16 @@
 [ext_resource type="SpriteFrames" uid="uid://nfm4t7txex23" path="res://scenes/quests/story_quests/after_the_tremor/player_components/personajes/ente.tres" id="4_rie1x"]
 [ext_resource type="Script" uid="uid://df1hlhbkn06ws" path="res://scenes/quests/story_quests/the_last_cards/3.The_House_of_Words/scripts/hidden_letter.gd" id="5_rie1x"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o6256"]
+shader = ExtResource("2_04nh5")
+shader_parameter/light_pos = Vector2(0.5, 0.5)
+shader_parameter/light_radius = 0.22
+shader_parameter/cone_angle = 1.05
+shader_parameter/cone_direction = 0.0
+shader_parameter/darkness = 0.96
+shader_parameter/edge_softness = 0.08
+shader_parameter/aspect_ratio = 1.7778
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sf7up"]
 size = Vector2(82, 90)
 
@@ -18,16 +28,6 @@ size = Vector2(367, 441)
 [sub_resource type="CircleShape2D" id="CircleShape2D_04nh5"]
 radius = 75.9276
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_o6256"]
-shader = ExtResource("2_04nh5")
-shader_parameter/light_pos = Vector2(0.5, 0.5)
-shader_parameter/light_radius = 0.22
-shader_parameter/cone_angle = 1.05
-shader_parameter/cone_direction = 0.0
-shader_parameter/darkness = 0.96
-shader_parameter/edge_softness = 0.08
-shader_parameter/aspect_ratio = 1.7778
-
 [node name="Room1" type="Node2D" unique_id=8831323]
 script = ExtResource("1_2dtu0")
 
@@ -35,6 +35,20 @@ script = ExtResource("1_2dtu0")
 offset_right = 1612.0
 offset_bottom = 973.0
 color = Color(0.92535293, 0.9253528, 0.9253529, 1)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="ColorRect" unique_id=695187882]
+layer = 10
+
+[node name="DarknessOverlay" type="ColorRect" parent="ColorRect/CanvasLayer" unique_id=351799045]
+z_index = 10
+material = SubResource("ShaderMaterial_o6256")
+offset_right = 1612.0
+offset_bottom = 973.0
+color = Color(0, 0, 0, 0.003921569)
+script = ExtResource("3_sc6b0")
+
+[node name="Player" parent="." unique_id=689832587 instance=ExtResource("4_04nh5")]
+position = Vector2(200, 500)
 
 [node name="CanvasGroup" type="CanvasGroup" parent="." unique_id=561364126]
 
@@ -364,16 +378,3 @@ text = "C"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Letras Escondidas/Letra_A2" unique_id=1252844015]
 position = Vector2(34, 52)
 shape = SubResource("CircleShape2D_04nh5")
-
-[node name="Player" parent="." unique_id=689832587 instance=ExtResource("4_04nh5")]
-position = Vector2(200, 500)
-
-[node name="DarknessOverlay" type="ColorRect" parent="Player" unique_id=351799045]
-z_index = 10
-material = SubResource("ShaderMaterial_o6256")
-offset_left = -198.0
-offset_top = -497.0
-offset_right = 1407.0
-offset_bottom = 473.0
-color = Color(0, 0, 0, 1)
-script = ExtResource("3_sc6b0")

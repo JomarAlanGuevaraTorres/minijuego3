@@ -1,8 +1,8 @@
 shader_type canvas_item;
 
 uniform vec2 light_pos = vec2(0.5, 0.5);
-uniform float light_radius : hint_range(0.0, 1.0) = 0.35;
-uniform float cone_angle : hint_range(0.0, 6.28318) = 1.5;
+uniform float light_radius : hint_range(0.0, 1.0) = 0.5;
+uniform float cone_angle : hint_range(0.0, 6.28318) = 0.5;
 uniform float cone_direction : hint_range(-3.14159, 3.14159) = 0.0;
 uniform float darkness : hint_range(0.0, 1.0) = 0.96;
 uniform float edge_softness : hint_range(0.0, 0.3) = 0.08;

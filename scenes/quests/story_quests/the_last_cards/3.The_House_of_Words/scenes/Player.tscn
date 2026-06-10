@@ -203,6 +203,7 @@ collision_layer = 0
 script = ExtResource("3_ydfgf")
 
 [node name="Light" type="PointLight2D" parent="DetectionArea" unique_id=366085581]
+visible = false
 position = Vector2(37.3333, 1.33333)
 scale = Vector2(0.340496, 0.340496)
 color = Color(0.973893, 0.98556215, 0.99269813, 1)
@@ -216,6 +217,7 @@ offset = Vector2(377.88, 10.7686)
 script = ExtResource("5_6a57l")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="DetectionArea" unique_id=1176393945]
+visible = false
 position = Vector2(-29.3333, -132)
 polygon = PackedVector2Array(302, 48, 283, 52, 279, 52, 101, 114, 98, 114, 79, 124, 77, 124, 72, 131, 71, 131, 71, 138, 78, 145, 78, 146, 95, 154, 95, 155, 275, 226, 275, 227, 292, 231, 292, 232, 312, 230, 316, 230, 330, 222, 332, 222, 340, 214, 341, 214, 346, 205, 347, 205, 351, 185, 351, 100, 347, 82, 347, 79, 338, 67, 338, 65, 325, 55, 325, 54, 302, 47)
 
