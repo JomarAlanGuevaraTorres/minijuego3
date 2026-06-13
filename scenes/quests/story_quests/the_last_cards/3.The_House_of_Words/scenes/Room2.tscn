@@ -4,6 +4,7 @@
 [ext_resource type="TileSet" uid="uid://4ewcvb1sibsf" path="res://scenes/quests/story_quests/after_the_tremor/3_combat/2_cinematicacombate/tile/tilestaller.tres" id="2_r87rn"]
 [ext_resource type="SpriteFrames" uid="uid://dkcv15as5d6gw" path="res://scenes/quests/story_quests/after_the_tremor/bryan_components/after_the_tremor_bryan.tres" id="3_l6voy"]
 [ext_resource type="SpriteFrames" uid="uid://nfm4t7txex23" path="res://scenes/quests/story_quests/after_the_tremor/player_components/personajes/ente.tres" id="4_r87rn"]
+[ext_resource type="PackedScene" uid="uid://dhydhpp43urah" path="res://scenes/ui_elements/dialogue/balloon.tscn" id="5_l6voy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xhlaj"]
 size = Vector2(83.5, 109)
@@ -321,3 +322,17 @@ max_length = 6
 wait_time = 90.0
 one_shot = true
 autostart = true
+
+[node name="Dialogue" parent="." unique_id=308207015 instance=ExtResource("5_l6voy")]
+
+[node name="Button" type="Button" parent="." unique_id=260996208]
+offset_left = 1200.0
+offset_top = 300.0
+offset_right = 1327.0
+offset_bottom = 353.0
+theme_override_colors/font_color = Color(0.7420213, 0.22322342, 0.2542457, 1)
+theme_override_colors/font_focus_color = Color(0.3023357, 0.954742, 0.8202423, 1)
+theme_override_font_sizes/font_size = 44
+text = "Acertijo"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

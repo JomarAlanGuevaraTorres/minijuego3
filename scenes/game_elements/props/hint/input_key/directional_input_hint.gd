@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: MPL-2.0
 extends TextureRect
 
-@export var action_prefix := &"move":
+# Cambiar el prefijo por defecto de "move" a "ui"
+@export var action_prefix := &"ui":
 	set = _set_action_prefix
 
 @export var devices: InputHintManager = preload("uid://c1beocky1qjxi")
@@ -22,7 +23,6 @@ var _right: Texture2D
 
 func _ready() -> void:
 	action_prefix = action_prefix
-
 	InputHelper.device_changed.connect(_on_input_device_changed)
 
 
@@ -40,7 +40,6 @@ func _set_action_prefix(new_prefix: StringName) -> void:
 
 	if not is_node_ready():
 		return
-
 	_refresh_textures()
 
 
@@ -54,6 +53,7 @@ func _refresh_textures() -> void:
 
 
 func _process(_delta: float) -> void:
+	# Se usan las acciones con el prefijo actual (ahora "ui")
 	if Input.is_action_pressed(_up_action):
 		texture = _up
 	elif Input.is_action_pressed(_down_action):

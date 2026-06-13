@@ -40,7 +40,6 @@ const MAXIMUM_ASPECT_RATIO := 2.2
 		_save()
 
 var _settings := ConfigFile.new()
-
 var _overrides_path: String
 var _overrides := ConfigFile.new()
 
@@ -62,12 +61,12 @@ func _ready() -> void:
 
 
 func _restore_volumes() -> void:
+	# Solo iterar sobre los buses que realmente existen
 	for bus_idx in AudioServer.bus_count:
-		var bus := AudioServer.get_bus_name(bus_idx)
+		var bus_name := AudioServer.get_bus_name(bus_idx)
 		var volume_linear: float = _settings.get_value(
-			VOLUME_SECTION, bus, DEFAULT_VOLUMES.get(bus, MAX_VOLUME)
+			VOLUME_SECTION, bus_name, DEFAULT_VOLUMES.get(bus_name, MAX_VOLUME)
 		)
-
 		_set_volume(bus_idx, volume_linear)
 
 
@@ -97,14 +96,19 @@ func _set_minimum_window_size() -> void:
 
 func get_volume(bus: String) -> float:
 	var bus_idx := AudioServer.get_bus_index(bus)
-
+	if bus_idx == -1:
+		# Bus no encontrado, devolver el volumen por defecto o el máximo
+		push_warning("Bus de audio '%s' no encontrado. Usando volumen por defecto." % bus)
+		return DEFAULT_VOLUMES.get(bus, MAX_VOLUME)
 	return AudioServer.get_bus_volume_linear(bus_idx)
 
 
 func set_volume(bus: String, volume_linear: float) -> void:
 	var bus_idx := AudioServer.get_bus_index(bus)
+	if bus_idx == -1:
+		push_error("No se puede ajustar volumen: bus de audio '%s' no existe." % bus)
+		return
 	_set_volume(bus_idx, volume_linear)
-
 	_settings.set_value(VOLUME_SECTION, bus, volume_linear)
 	_save()
 
@@ -139,7 +143,7 @@ func set_window_mode(window_mode: int) -> void:
 		_overrides.set_value("display", "window/size/mode", window_mode)
 		var ret := _overrides.save(_overrides_path)
 		if ret != OK:
-			push_warning("Failed to save to", _overrides_path, ": ", error_string(ret))
+			push_warning("Failed to save to ", _overrides_path, ": ", error_string(ret))
 
 
 func _restore_locale() -> void:
@@ -148,6 +152,10 @@ func _restore_locale() -> void:
 
 
 func _set_volume(bus_idx: int, volume_linear: float) -> void:
+	# Asegurar que el índice es válido
+	if bus_idx < 0 or bus_idx >= AudioServer.bus_count:
+		push_error("Índice de bus inválido: ", bus_idx)
+		return
 	AudioServer.set_bus_volume_linear(bus_idx, volume_linear)
 
 
