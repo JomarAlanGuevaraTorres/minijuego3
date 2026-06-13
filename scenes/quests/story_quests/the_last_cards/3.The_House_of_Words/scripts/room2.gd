@@ -6,10 +6,10 @@ const SPEED_NUBE = 55
 var palabra_secreta = ""
 var intento_actual = 0
 var tiempo_restante = 120
-var juego_activo = false  # Empieza en false hasta que termine el diálogo
+var juego_activo = false
 var escribiendo = false
 
-@onready var dialogue_balloon = $Dialogue  # Nodo balloon.tscn hijo de Room2
+@onready var dialogue_balloon = $Dialogue
 @onready var input_letra = $CanvasGroup/InputLetra
 @onready var grid_letras = $CanvasGroup/Panel/GridLetras
 @onready var label_mensaje = $CanvasGroup/Panel/LabelMensaje
@@ -17,11 +17,12 @@ var escribiendo = false
 @onready var timer_principal = $Timer
 @onready var nube = $NubeNegra
 @onready var player = $Player
+@onready var button = $Button  # El botón oculto
 
 func _ready():
 	randomize()
 	palabra_secreta = PALABRAS[randi() % PALABRAS.size()]
-	
+
 	# Configurar grid de letras (36 labels para 6 intentos x 6 letras)
 	for i in range(36):
 		var label = grid_letras.get_child(i)
@@ -37,20 +38,20 @@ func _ready():
 		sb.border_width_bottom = 2
 		sb.border_color = Color(0.4, 0.4, 0.6)
 		label.add_theme_stylebox_override("normal", sb)
-	
+
 	# Deshabilitar UI hasta el diálogo
 	input_letra.editable = false
 	input_letra.focus_mode = Control.FOCUS_NONE
 	label_mensaje.text = "Escucha el diálogo..."
 	timer_principal.stop()
 	label_tiempo.text = "00:00"
-	
+
 	# Conectar señales
 	input_letra.text_submitted.connect(_on_palabra_enviada)
 	input_letra.focus_entered.connect(_on_input_focus)
 	input_letra.focus_exited.connect(_on_input_unfocus)
 	timer_principal.timeout.connect(_on_tiempo_agotado)
-	
+
 	# Tick de 1 segundo
 	var tick = Timer.new()
 	tick.wait_time = 1.0
@@ -58,7 +59,44 @@ func _ready():
 	add_child(tick)
 	tick.timeout.connect(_on_timer_tick)
 	set_meta("tick_timer", tick)
-	
+
+	# ------------------------------------------------------------
+	# CONFIGURACIÓN DEL BOTÓN OCULTO (detectable por el jugador)
+	# ------------------------------------------------------------
+	if button:
+		# Invisibilidad y desactivación inicial
+		button.visible = false
+		button.disabled = true
+
+		# Posición aleatoria dentro de los límites de la habitación
+		# Ajusta estos valores al tamaño real de tu escena (ejemplo para 1280x720)
+		var min_x = 100.0
+		var max_x = 1180.0
+		var min_y = 100.0
+		var max_y = 620.0
+		button.position = Vector2(randf_range(min_x, max_x), randf_range(min_y, max_y))
+
+		# Crear un Area2D hijo para que el jugador lo detecte
+		var area = Area2D.new()
+		# Asignar capa de colisión (por ejemplo, capa 4) y máscara (la que corresponda al jugador)
+		# La capa 4 debe coincidir con la máscara del DetectionArea del jugador.
+		# Si no sabes qué capa usa, pon la misma que usan las hidden_letter.
+		area.collision_layer = 4   # Ajusta si es necesario
+		area.collision_mask = 0    # No necesita detectar nada, solo ser detectada
+
+		var collision_shape = CollisionShape2D.new()
+		var circle_shape = CircleShape2D.new()
+		circle_shape.radius = 60  # Radio de detección
+		collision_shape.shape = circle_shape
+		area.add_child(collision_shape)
+		button.add_child(area)
+
+		# Conectar la señal area_entered de este Area2D para detectar al jugador
+		area.area_entered.connect(_on_button_area_entered)
+
+		# Conectar la acción del botón al ser presionado
+		button.pressed.connect(_on_button_pressed)
+
 	# Diálogo inicial
 	if dialogue_balloon:
 		dialogue_balloon.tree_exited.connect(_on_dialogue_finished)
@@ -142,7 +180,7 @@ func _evaluar_intento(intento):
 		else:
 			label.add_theme_stylebox_override("normal", _crear_fondo(Color(0.2, 0.2, 0.2)))
 			label.add_theme_color_override("font_color", Color.WHITE)
-	
+
 	if intento == palabra_secreta:
 		juego_activo = false
 		label_mensaje.text = "¡Correcto! Siguiente habitación..."
@@ -195,3 +233,24 @@ func _input(event: InputEvent):
 			input_letra.grab_focus()
 		else:
 			input_letra.release_focus()
+
+# ------------------------------------------------------------
+# FUNCIONES NUEVAS PARA EL BOTÓN DETECTABLE
+# ------------------------------------------------------------
+
+func _on_button_area_entered(area_that_entered: Area2D) -> void:
+	# Solo reacciona si el área que entra es el DetectionArea del jugador
+	# Podemos verificarlo por nombre o por el nodo propietario (player)
+	if area_that_entered == player.detection_area and button and not button.visible:
+		button.visible = true
+		button.disabled = false
+		# Opcional: emitir sonido o mensaje
+		# Desconectar la señal para que no se repita
+		var button_area = button.get_node("Area2D")
+		if button_area:
+			button_area.area_entered.disconnect(_on_button_area_entered)
+
+func _on_button_pressed():
+	# Acción al presionar el botón ya visible
+	# Ejemplo: avanzar a la siguiente escena
+	get_tree().change_scene_to_file("res://scenes/quests/story_quests/the_last_cards/3.The_House_of_Words/scenes/Room3.tscn")
